@@ -78,33 +78,36 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Please enter some text for Search'),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            labelText: 'Please enter some text for Search'),
 //                        initialValue: data == null ? '' : data.title,
-                      validator: (String value) {
-                        if (value.isEmpty || value.length < 2) {
-                          return 'Please enter some text and should be 2+ characters long.';
-                        }
-                      },
-                      onSaved: (String value) {
-                        _searchText = value;
-                      },
+                        validator: (String value) {
+                          if (value.isEmpty || value.length < 2) {
+                            return 'Please enter some text and should be 2+ characters long.';
+                          }
+                        },
+                        onSaved: (String value) {
+                          _searchText = value;
+                        },
+                      ),
                     ),
-                  ),
-                  Image(
-                    image: new AssetImage("assets/images/search80.png"),
-                    width: 60,
-                    height: 60,
-                    color: null,
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.center,
-                  )
-                ],
+                    Image(
+                      image: new AssetImage("assets/images/search80.png"),
+                      width: 60,
+                      height: 60,
+                      color: null,
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                    )
+                  ],
+                ),
               ),
               Expanded(
                 child: FutureBuilder(
@@ -130,20 +133,22 @@ class _MyHomePageState extends State<MyHomePage> {
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                              onTap: () {
+                            return Card(
+                              child: ListTile(
+                                onTap: () {
                                   Navigator.push(
                                       context,
                                       new MaterialPageRoute(
                                           builder: (context) => UserDetailPage(
                                               snapshot.data[index])));
-                              },
-                              title: Text(snapshot.data[index].login),
-                              subtitle:
-                              Text("Score : " + snapshot.data[index].score),
-                              leading: Image(
-                                  image: NetworkImage(
-                                      snapshot.data[index].avatar_url)),
+                                },
+                                title: Text(snapshot.data[index].login),
+                                subtitle: Text(
+                                    "Score : " + snapshot.data[index].score),
+                                leading: Image(
+                                    image: NetworkImage(
+                                        snapshot.data[index].avatar_url)),
+                              ),
                             );
                           },
                         ),
@@ -172,23 +177,22 @@ class _MyHomePageState extends State<MyHomePage> {
   // https://stackoverflow.com/questions/49356664/how-to-override-the-back-button-in-flutter
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) =>
-      new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
           ),
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
@@ -201,13 +205,13 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       List<Item> users = [];
       var response =
-      await http.get(Constants.BaseURL+'search/users?q=pritam&page=1');
+          await http.get(Constants.BaseURL + 'search/users?q=pritam&page=1');
 
       var aObj = json.decode(response.body);
 //    print(aObj["items"][10]["avatar_url"]);
       for (var user in aObj["items"]) {
         Item newUser =
-        Item(user["avatar_url"], user["login"], user["score"].toString());
+            Item(user["avatar_url"], user["login"], user["score"].toString());
         users.add(newUser);
       }
       return users;
@@ -216,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 //    } else {
       final snackBar = SnackBar(
-        content: Text('Yay! A SnackBar!'),
+        content: Text('No Internet connected!'),
         action: SnackBarAction(
           label: 'Retry',
           onPressed: () {

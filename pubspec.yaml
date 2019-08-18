@@ -47,7 +47,18 @@ flutter:
   assets:
     - assets/images/search80.png
     - assets/images/ic_launcher.png
-  #  - images/a_dot_ham.jpeg
+    - assets/images/adduser80.png
+    - assets/images/checkeduser80.png
+    - assets/images/clock80.png
+    - assets/images/code80.png
+    - assets/images/codefork96.png
+    - assets/images/create80.png
+    - assets/images/email96.png
+    - assets/images/info80.png
+    - assets/images/location80.png
+    - assets/images/no_image_placeholder.png
+    - assets/images/repository80.png
+    - assets/images/star80.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
