@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import '../model/item.dart';
+import '../utility/utility.dart';
 import './userdetail.dart';
 import '../constant.dart' as Constants;
 
@@ -16,21 +18,9 @@ class FollowersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyHomePage(title: this.username + ' Followers'),
+      body: MyHomePage(title: this.username),
     );
   }
-}
-
-// https://flutter.dev/docs/catalog/samples/basic-app-bar
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Share', icon: Icons.share),
-  const Choice(title: 'Exit', icon: Icons.exit_to_app),
-];
-
-class Choice {
-  const Choice({this.title, this.icon});
-  final String title;
-  final IconData icon;
 }
 
 class MyHomePage extends StatefulWidget {
@@ -49,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title  + ' Followers'),
         actions: <Widget>[
           // overflow menu
           PopupMenuButton<Choice>(
@@ -117,38 +107,16 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedChoice = choice;
       if (_selectedChoice.title.toString() == "Share") {
-        _onWillPop();
+        Utility().shareURL(context, widget.title);
       } else if (_selectedChoice.title.toString() == "Exit") {
-        _onWillPop();
+        Utility().onWillPop(context);
       }
     });
   }
 
-  // https://stackoverflow.com/questions/49356664/how-to-override-the-back-button-in-flutter
-  Future<bool> _onWillPop() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
 
   @override
   Future<List<Item>> _getGitFollowers(username) async {
-    username = username.toString().replaceAll(' Followers', '');
     try {
       List<Item> users = [];
       var response = await http.get(
@@ -176,3 +144,5 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 }
+
+

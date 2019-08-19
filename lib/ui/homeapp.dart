@@ -7,6 +7,7 @@ import 'dart:io';
 
 import '../model/item.dart';
 import './userdetail.dart';
+import '../utility/utility.dart';
 import '../constant.dart' as Constants;
 
 class HomeApp extends StatelessWidget {
@@ -169,31 +170,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedChoice = choice;
       if (_selectedChoice.title.toString() == "Exit") {
-        _onWillPop();
+        Utility().onWillPop(context);
       }
     });
   }
 
-  // https://stackoverflow.com/questions/49356664/how-to-override-the-back-button-in-flutter
   Future<bool> _onWillPop() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    return Utility().onWillPop(context);
   }
 
   @override

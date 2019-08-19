@@ -48,6 +48,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_custom_tabs:
+    dependency: "direct main"
+    description:
+      name: flutter_custom_tabs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -102,6 +109,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  share:
+    dependency: "direct main"
+    description:
+      name: share
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -163,6 +177,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.2"
   vector_math:
     dependency: transitive
     description:
@@ -172,4 +193,4 @@ packages:
     version: "2.0.8"
 sdks:
   dart: ">=2.2.2 <3.0.0"
-  flutter: ">=1.2.0 <2.0.0"
+  flutter: ">=1.6.0 <2.0.0"

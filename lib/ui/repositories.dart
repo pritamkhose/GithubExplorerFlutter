@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import '../model/user_repos.dart';
-import './userdetail.dart';
+import '../utility/utility.dart';
 import '../constant.dart' as Constants;
 
 class RepositoryPage extends StatelessWidget {
@@ -16,21 +17,9 @@ class RepositoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyHomePage(title: this.username + ' Repository'),
+      body: MyHomePage(title: this.username),
     );
   }
-}
-
-// https://flutter.dev/docs/catalog/samples/basic-app-bar
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Share', icon: Icons.share),
-  const Choice(title: 'Exit', icon: Icons.exit_to_app),
-];
-
-class Choice {
-  const Choice({this.title, this.icon});
-  final String title;
-  final IconData icon;
 }
 
 class MyHomePage extends StatefulWidget {
@@ -49,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title + ' Repository'),
         actions: <Widget>[
           // overflow menu
           PopupMenuButton<Choice>(
@@ -87,26 +76,108 @@ class _MyHomePageState extends State<MyHomePage> {
                         return Card(
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => UserDetailPage(
-                                          snapshot.data[index])));
+                              Utility().launchURL(
+                                  context, snapshot.data[index].html_url);
                             },
 //                            contentPadding: const EdgeInsets.all(2.0),
                             title: Text(
                               snapshot.data[index].name != null
                                   ? snapshot.data[index].name
                                   : '',
-                              style:
-                                  TextStyle(color: Colors.blue, fontSize: 20),
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
                             ),
-                            subtitle: Text(
-                                snapshot.data[index].description != null
-                                    ? snapshot.data[index].description
-                                    : '',
-                              style:
-                              TextStyle(color: Colors.black, fontSize: 16),),
+                            subtitle: Column(
+                              children: <Widget>[
+                                Visibility(
+                                  child: Text(
+                                    '',
+                                    style: TextStyle(fontSize: 6),
+                                  ),
+                                  visible:
+                                      snapshot.data[index].description != null,
+                                ),
+                                Visibility(
+                                  child: Text(
+                                    snapshot.data[index].description != null
+                                        ? snapshot.data[index].description
+                                        : '',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                  ),
+                                  visible:
+                                      snapshot.data[index].description != null,
+                                ),
+                                Text(
+                                  '',
+                                  style: TextStyle(fontSize: 6),
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        snapshot.data[index].language != null
+                                            ? snapshot.data[index].language
+                                            : '',
+                                        style: TextStyle(
+                                            color: Colors.blue, fontSize: 14),
+                                      ),
+                                    ),
+                                    Image(
+                                      image: new AssetImage(
+                                          "assets/images/star80.png"),
+                                      width: 20,
+                                      height: 20,
+                                      color: null,
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.center,
+                                    ),
+                                    Text(
+                                      '  ',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      snapshot.data[index].stargazers_count !=
+                                              null
+                                          ? snapshot
+                                              .data[index].stargazers_count
+                                              .toString()
+                                          : '0',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    ),
+                                    Text(
+                                      '     ',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    Image(
+                                      image: new AssetImage(
+                                          "assets/images/codefork96.png"),
+                                      width: 20,
+                                      height: 20,
+                                      color: null,
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.center,
+                                    ),
+                                    Text(
+                                      '  ',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      snapshot.data[index].forks != null
+                                          ? snapshot.data[index].forks
+                                              .toString()
+                                          : '0',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -126,38 +197,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedChoice = choice;
       if (_selectedChoice.title.toString() == "Share") {
-        _onWillPop();
+        Utility().shareURL(context, widget.title);
       } else if (_selectedChoice.title.toString() == "Exit") {
-        _onWillPop();
+        Utility().onWillPop(context);
       }
     });
   }
 
-  // https://stackoverflow.com/questions/49356664/how-to-override-the-back-button-in-flutter
-  Future<bool> _onWillPop() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
-
   @override
   Future<List<UserRepos>> _getGitRepository(username) async {
-    username = username.toString().replaceAll(' Repository', '');
     try {
       List<UserRepos> repos = [];
       var response = await http.get(Constants.BaseURL +
