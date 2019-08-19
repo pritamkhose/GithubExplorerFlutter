@@ -29,6 +29,7 @@ dependencies:
   flutter_custom_tabs: ^0.6.0
   url_launcher: ^5.1.2
   share: ^0.6.2+1
+  intl: ^0.15.8
 
 dev_dependencies:
   flutter_test:
