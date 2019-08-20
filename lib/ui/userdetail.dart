@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import '../model/item.dart';
 import '../model/user_detail_response.dart';
 import '../utility/utility.dart';
-import './userdetail.dart';
 import '../constant.dart' as Constants;
 
 import './followers.dart';
@@ -162,14 +161,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       fontSize: 16)),
                                             ),
                                             Visibility(
-                                              visible: userObj.score != null,
+                                              visible: (userObj.score != null && userObj.score != '0'),
                                               child: Text('',
                                                   style:
                                                       TextStyle(fontSize: 4)),
                                             ),
                                             Visibility(
-                                              visible: snapshot.data.location !=
-                                                  null,
+                                              visible: (userObj.score != null && userObj.score != '0'),
                                               child: Text(
                                                   userObj.score != null
                                                       ? 'Score : ' +
@@ -189,129 +187,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Visibility(
                                   visible: (snapshot.data.blog != null &&
                                       snapshot.data.blog.toString().length > 2),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Image(
-                                        image: new AssetImage(
-                                            "assets/images/info80.png"),
-                                        width: 20,
-                                        height: 20,
-                                        color: null,
-                                        fit: BoxFit.scaleDown,
-                                        alignment: Alignment.center,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(6.0),
-                                          child: Text(
-                                            snapshot.data.blog != null
-                                                ? snapshot.data.blog
-                                                : '',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  child: _infoRow(
+                                      snapshot.data.blog, '', 'info80'),
                                 ),
                                 Visibility(
                                   visible: snapshot.data.email != null,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Image(
-                                        image: new AssetImage(
-                                            "assets/images/email96.png"),
-                                        width: 20,
-                                        height: 20,
-                                        color: null,
-                                        fit: BoxFit.scaleDown,
-                                        alignment: Alignment.center,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(6.0),
-                                          child: Text(
-                                            snapshot.data.email != null
-                                                ? snapshot.data.email
-                                                : '',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  child: _infoRow(
+                                      snapshot.data.email, '', 'email96'),
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Image(
-                                      image: new AssetImage(
-                                          "assets/images/create80.png"),
-                                      width: 20,
-                                      height: 20,
-                                      color: null,
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.center,
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(6.0),
-                                        child: Text(
-                                          'Joined At : ' +
-                                              _dateFormat(
-                                                  snapshot.data.created_at),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Image(
-                                      image: new AssetImage(
-                                          "assets/images/clock80.png"),
-                                      width: 20,
-                                      height: 20,
-                                      color: null,
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.center,
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(6.0),
-                                        child: Text(
-                                          'Last Updated At : ' +
-                                              _dateFormat(snapshot.data.updated_at),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                _infoRow(_dateFormat(snapshot.data.created_at),
+                                    'Joined At : ', 'create80'),
+                                _infoRow(_dateFormat(snapshot.data.updated_at),
+                                    'Last Updated At : ', 'clock80'),
                               ],
                             ),
                           ),
@@ -320,238 +207,28 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (snapshot.data.followers > 0) {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                FollowersPage(userObj.login)));
-                                  } else {
-                                    _showSnackMsg('Followers');
-                                  }
-                                },
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data.followers.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 25),
-                                        ),
-                                        Container(padding: EdgeInsets.all(6.0)),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image(
-                                              image: new AssetImage(
-                                                  "assets/images/adduser80.png"),
-                                              width: 25,
-                                              height: 25,
-                                              color: null,
-                                              fit: BoxFit.scaleDown,
-                                              alignment: Alignment.center,
-                                            ),
-                                            Text(
-                                              ' Followers',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (snapshot.data.following > 0) {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                FollowingPage(userObj.login)));
-                                  } else {
-                                    _showSnackMsg('Following');
-                                  }
-                                },
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data.following.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 25),
-                                        ),
-                                        Container(padding: EdgeInsets.all(6.0)),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image(
-                                              image: new AssetImage(
-                                                  "assets/images/checkeduser80.png"),
-                                              width: 25,
-                                              height: 25,
-                                              color: null,
-                                              fit: BoxFit.scaleDown,
-                                              alignment: Alignment.center,
-                                            ),
-                                            Text(
-                                              ' Following',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            _getCard(userObj, snapshot, snapshot.data.followers,
+                                'Followers', 'adduser80'),
+                            _getCard(userObj, snapshot, snapshot.data.following,
+                                'Following', 'checkeduser80'),
                           ],
                         ),
                         Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        snapshot.data.public_gists.toString(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 25),
-                                      ),
-                                      Container(padding: EdgeInsets.all(6.0)),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Image(
-                                            image: new AssetImage(
-                                                "assets/images/code80.png"),
-                                            width: 25,
-                                            height: 25,
-                                            color: null,
-                                            fit: BoxFit.scaleDown,
-                                            alignment: Alignment.center,
-                                          ),
-                                          Text(
-                                            ' Public Gists',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (snapshot.data.public_repos > 0) {
-                                    Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                RepositoryPage(userObj.login)));
-                                  } else {
-                                    _showSnackMsg('Repository');
-                                  }
-                                },
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data.public_repos.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 25),
-                                        ),
-                                        Container(padding: EdgeInsets.all(6.0)),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image(
-                                              image: new AssetImage(
-                                                  "assets/images/repository80.png"),
-                                              width: 25,
-                                              height: 25,
-                                              color: null,
-                                              fit: BoxFit.scaleDown,
-                                              alignment: Alignment.center,
-                                            ),
-                                            Text(
-                                              ' Repositories',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            _getCard(
+                                userObj,
+                                snapshot,
+                                snapshot.data.public_gists,
+                                'Public Gists',
+                                'code80'),
+                            _getCard(
+                                userObj,
+                                snapshot,
+                                snapshot.data.public_repos,
+                                'Repository',
+                                'repository80'),
                           ],
                         ),
                       ],
@@ -562,6 +239,105 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _infoRow(data, title, imgName) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Image(
+          image: new AssetImage('assets/images/' + imgName + '.png'),
+          width: 20,
+          height: 20,
+          color: null,
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.center,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Text(
+              data != null ? title + data : '',
+              textAlign: TextAlign.left,
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _getCard(userObj, snapshot, aCount, name, imgName) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          if (snapshot.data.followers > 0) {
+            switch (name) {
+              case 'Followers':
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => FollowersPage(userObj.login)));
+                break;
+              case 'Following':
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => FollowingPage(userObj.login)));
+                break;
+              case 'Repository':
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => RepositoryPage(userObj.login)));
+                break;
+              case 'Public Gists':
+                break;
+            }
+          } else {
+            _showSnackMsg(name);
+          }
+        },
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  aCount.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.black, fontSize: 25),
+                ),
+                Container(padding: EdgeInsets.all(6.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Image(
+                      image:
+                          new AssetImage('assets/images/' + imgName + '.png'),
+                      width: 25,
+                      height: 25,
+                      color: null,
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                    ),
+                    Text(
+                      ' ' + name,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
