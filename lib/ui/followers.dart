@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title  + ' Followers'),
+        title: Text(widget.title + ' Followers'),
         actions: <Widget>[
           // overflow menu
           PopupMenuButton<Choice>(
@@ -114,13 +114,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
-  @override
   Future<List<Item>> _getGitFollowers(username) async {
     try {
       List<Item> users = [];
-      var response = await http.get(
-          Constants.BaseURL + 'users/' + username + '/followers?per_page=100');
+      var response = await http.get(Uri.parse(
+          Constants.BaseURL + 'users/' + username + '/followers?per_page=100'));
 
       var aObj = json.decode(response.body);
 //      print(aObj);
@@ -140,9 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 }
-
-

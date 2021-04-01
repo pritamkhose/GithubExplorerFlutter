@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //    if (connectivityResult == ConnectivityResult.mobile ||
 //        connectivityResult == ConnectivityResult.wifi) {
     try {
-      var response = await http.get(Uri.encodeFull(
+      var response = await http.get(Uri.parse(
           Constants.BaseURL + 'search/users?q=' + _searchText + '&page=1'));
       var aObj = json.decode(response.body);
       // print(aObj["items"]);
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // Find the Scaffold in the widget tree and use
       // it to show a SnackBar.
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -116,6 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          backgroundColor: Colors.blue,
+          brightness: Brightness.light,
           title: Text(widget.title),
           actions: <Widget>[
             // overflow menu
@@ -160,6 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   } else {
                                     _searchText = value;
                                     _getGitUsers();
+                                    return '';
                                   }
                                 },
                                 onSaved: (String value) {

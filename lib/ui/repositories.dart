@@ -208,10 +208,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<List<UserRepos>> _getGitRepository(username) async {
     try {
       List<UserRepos> repos = [];
-      var response = await http.get(Constants.BaseURL +
+      var response = await http.get(Uri.parse(Constants.BaseURL +
           'users/' +
           username +
-          '/repos?sort=updated&per_page=100');
+          '/repos?sort=updated&per_page=100'));
 
       var aObj = json.decode(response.body);
       for (var repo in aObj) {
@@ -238,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 }

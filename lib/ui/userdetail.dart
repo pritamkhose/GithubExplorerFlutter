@@ -358,7 +358,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<UserDetailsResponse> _getUserDetails(username) async {
     try {
       UserDetailsResponse userDetail;
-      var response = await http.get(Constants.BaseURL + 'users/' + username);
+      var response = await http.get(Uri.parse(Constants.BaseURL + 'users/' + username));
       var aObj = json.decode(response.body);
       userDetail = UserDetailsResponse(
         aObj["name"],
@@ -388,7 +388,7 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -396,7 +396,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final snackBar = SnackBar(
       content: Text(s + ' not Found !'),
     );
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   String _dateFormat(String s) {

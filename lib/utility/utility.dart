@@ -27,11 +27,11 @@ class Utility {
             title: new Text('Are you sure?'),
             content: new Text('Do you want to exit an App'),
             actions: <Widget>[
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text('No'),
               ),
-              new FlatButton(
+              new TextButton(
                 onPressed: () => exit(0),
                 child: new Text('Yes'),
               ),
@@ -85,7 +85,7 @@ class Utility {
       final snackBar = SnackBar(
         content: Text('Invalid URL = ' + url),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
