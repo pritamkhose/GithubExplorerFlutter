@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../model/item.dart';
 import '../model/user_detail_response.dart';
 import '../utility/utility.dart';
-import '../constant.dart' as Constants;
+import '../constant.dart' as constants;
 
 import './followers.dart';
 import './following.dart';
@@ -18,18 +18,18 @@ import './repositories.dart';
 class UserDetailPage extends StatelessWidget {
   final Item user;
 
-  UserDetailPage(this.user);
+  const UserDetailPage({key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyHomePage(title: this.user.login, userObj: this.user),
+      body: MyHomePage(title: user.login, userObj: user),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, this.userObj}) : super(key: key);
+  const MyHomePage({key, required this.title, required this.userObj}) : super(key: key);
 
   final String title;
   final Item userObj;
@@ -70,10 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
               future: _getUserDetails(widget.title),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data == null) {
-                  return Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 } else {
                   return SingleChildScrollView(
@@ -115,11 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                               visible:
                                                   snapshot.data.name != null,
                                               child: Text(
-                                                snapshot.data.name != null
-                                                    ? snapshot.data.name
-                                                    : '',
+                                                snapshot.data.name ?? '',
                                                 textAlign: TextAlign.left,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.blue,
                                                     fontSize: 22),
                                               ),
@@ -127,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             Visibility(
                                               visible:
                                                   snapshot.data.bio != null,
-                                              child: Text('',
+                                              child: const Text('',
                                                   style:
                                                       TextStyle(fontSize: 4)),
                                             ),
@@ -135,17 +131,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                               visible:
                                                   snapshot.data.bio != null,
                                               child: Text(
-                                                  snapshot.data.bio != null
-                                                      ? snapshot.data.bio
-                                                      : '',
-                                                  style: TextStyle(
+                                                  snapshot.data.bio ?? '',
+                                                  style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 16)),
                                             ),
                                             Visibility(
                                               visible: snapshot.data.location !=
                                                   null,
-                                              child: Text('',
+                                              child: const Text('',
                                                   style:
                                                       TextStyle(fontSize: 4)),
                                             ),
@@ -153,16 +147,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                               visible: snapshot.data.location !=
                                                   null,
                                               child: Text(
-                                                  snapshot.data.location != null
-                                                      ? snapshot.data.location
-                                                      : '',
-                                                  style: TextStyle(
+                                                  snapshot.data.location ?? '',
+                                                  style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 16)),
                                             ),
                                             Visibility(
                                               visible: (userObj.score != null && userObj.score != '0'),
-                                              child: Text('',
+                                              child: const Text('',
                                                   style:
                                                       TextStyle(fontSize: 4)),
                                             ),
@@ -174,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           userObj.score
                                                               .toString()
                                                       : '',
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 16)),
                                             ),
@@ -249,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Image(
-          image: new AssetImage('assets/images/' + imgName + '.png'),
+          image: AssetImage('assets/images/' + imgName + '.png'),
           width: 20,
           height: 20,
           color: null,
@@ -262,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text(
               data != null ? title + data : '',
               textAlign: TextAlign.left,
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
         ),
@@ -279,20 +271,20 @@ class _MyHomePageState extends State<MyHomePage> {
               case 'Followers':
                 Navigator.push(
                     context,
-                    new MaterialPageRoute(
-                        builder: (context) => FollowersPage(userObj.login)));
+                    MaterialPageRoute(
+                        builder: (context) => FollowersPage(username: userObj.login)));
                 break;
               case 'Following':
                 Navigator.push(
                     context,
-                    new MaterialPageRoute(
-                        builder: (context) => FollowingPage(userObj.login)));
+                    MaterialPageRoute(
+                        builder: (context) => FollowingPage(username: userObj.login)));
                 break;
               case 'Repository':
                 Navigator.push(
                     context,
-                    new MaterialPageRoute(
-                        builder: (context) => RepositoryPage(userObj.login)));
+                    MaterialPageRoute(
+                        builder: (context) => RepositoryPage(username: userObj.login)));
                 break;
               case 'Public Gists':
                 break;
@@ -311,16 +303,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 Text(
                   aCount.toString(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black, fontSize: 25),
+                  style: const TextStyle(color: Colors.black, fontSize: 25),
                 ),
-                Container(padding: EdgeInsets.all(6.0)),
+                Container(padding: const EdgeInsets.all(6.0)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Image(
                       image:
-                          new AssetImage('assets/images/' + imgName + '.png'),
+                          AssetImage('assets/images/' + imgName + '.png'),
                       width: 25,
                       height: 25,
                       color: null,
@@ -330,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text(
                       ' ' + name,
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
                     ),
                   ],
                 ),
@@ -349,16 +341,15 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_selectedChoice.title.toString() == "Share") {
         Utility().shareURL(context, widget.title);
       } else if (_selectedChoice.title.toString() == "Exit") {
-        Utility().onWillPop(context);
+        Utility().showExitDialog(context);
       }
     });
   }
 
-  @override
-  Future<UserDetailsResponse> _getUserDetails(username) async {
+  Future<UserDetailsResponse?> _getUserDetails(username) async {
     try {
       UserDetailsResponse userDetail;
-      var response = await http.get(Uri.parse(Constants.BaseURL + 'users/' + username));
+      var response = await http.get(Uri.parse(constants.BaseURL + 'users/' + username));
       var aObj = json.decode(response.body);
       userDetail = UserDetailsResponse(
         aObj["name"],
@@ -378,9 +369,9 @@ class _MyHomePageState extends State<MyHomePage> {
       );
       return userDetail;
     } on SocketException catch (_) {
-      print('not connected');
+      // print('not connected');
       final snackBar = SnackBar(
-        content: Text('No Internet connected!'),
+        content: const Text('No Internet connected!'),
         action: SnackBarAction(
           label: 'Retry',
           onPressed: () {
@@ -401,7 +392,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _dateFormat(String s) {
     var parsedDate = DateTime.parse(s);
-    var formatter = new DateFormat('dd MMM yyyy @ HH:mm');
+    var formatter = DateFormat('dd MMM yyyy @ HH:mm');
     s = formatter.format(parsedDate);
     return s;
   }

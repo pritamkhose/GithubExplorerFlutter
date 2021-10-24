@@ -8,23 +8,23 @@ import 'dart:io';
 import '../model/item.dart';
 import '../utility/utility.dart';
 import './userdetail.dart';
-import '../constant.dart' as Constants;
+import '../constant.dart' as constants;
 
 class FollowersPage extends StatelessWidget {
   final String username;
 
-  FollowersPage(this.username);
+  const FollowersPage({key, required this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyHomePage(title: this.username),
+      body: MyHomePage(title: username),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -63,35 +63,31 @@ class _MyHomePageState extends State<MyHomePage> {
               future: _getGitFollowers(widget.title),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data == null) {
-                  return Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 } else {
-                  return Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => UserDetailPage(
-                                          snapshot.data[index])));
-                            },
-                            contentPadding: const EdgeInsets.all(4.0),
-                            title: Text(snapshot.data[index].login),
-                            leading: Image(
-                                image: NetworkImage(
-                                    snapshot.data[index].avatar_url)),
-                          ),
-                        );
-                      },
-                    ),
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserDetailPage(user:
+                                    snapshot.data[index])));
+                          },
+                          contentPadding: const EdgeInsets.all(4.0),
+                          title: Text(snapshot.data[index].login),
+                          leading: Image(
+                              image: NetworkImage(
+                                  snapshot.data[index].avatar_url)),
+                        ),
+                      );
+                    },
                   );
                 }
               },
@@ -109,16 +105,16 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_selectedChoice.title.toString() == "Share") {
         Utility().shareURL(context, widget.title);
       } else if (_selectedChoice.title.toString() == "Exit") {
-        Utility().onWillPop(context);
+        Utility().showExitDialog(context);
       }
     });
   }
 
-  Future<List<Item>> _getGitFollowers(username) async {
+  Future<List<Item>?> _getGitFollowers(username) async {
     try {
       List<Item> users = [];
       var response = await http.get(Uri.parse(
-          Constants.BaseURL + 'users/' + username + '/followers?per_page=100'));
+          constants.BaseURL + 'users/' + username + '/followers?per_page=100'));
 
       var aObj = json.decode(response.body);
 //      print(aObj);
@@ -128,9 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       return users;
     } on SocketException catch (_) {
-      print('not connected');
+      // print('not connected');
       final snackBar = SnackBar(
-        content: Text('No Internet connected!'),
+        content: const Text('No Internet connected!'),
         action: SnackBarAction(
           label: 'Retry',
           onPressed: () {

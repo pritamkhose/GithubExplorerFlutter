@@ -7,23 +7,23 @@ import 'dart:io';
 
 import '../model/user_repos.dart';
 import '../utility/utility.dart';
-import '../constant.dart' as Constants;
+import '../constant.dart' as constants;
 
 class RepositoryPage extends StatelessWidget {
   final String username;
 
-  RepositoryPage(this.username);
+  const RepositoryPage({key, required this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyHomePage(title: this.username),
+      body: MyHomePage(title: username),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -62,126 +62,116 @@ class _MyHomePageState extends State<MyHomePage> {
               future: _getGitRepository(widget.title),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data == null) {
-                  return Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 } else {
-                  return Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          child: ListTile(
-                            onTap: () {
-                              Utility().launchURL(
-                                  context, snapshot.data[index].html_url);
-                            },
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        child: ListTile(
+                          onTap: () {
+                            Utility().launchURL(
+                                context, snapshot.data[index].html_url);
+                          },
 //                            contentPadding: const EdgeInsets.all(2.0),
-                            title: Text(
-                              snapshot.data[index].name != null
-                                  ? snapshot.data[index].name
-                                  : '',
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            subtitle: Column(
-                              children: <Widget>[
-                                Visibility(
-                                  child: Text(
-                                    '',
-                                    style: TextStyle(fontSize: 6),
-                                  ),
-                                  visible:
-                                      snapshot.data[index].description != null,
-                                ),
-                                Visibility(
-                                  child: Text(
-                                    snapshot.data[index].description != null
-                                        ? snapshot.data[index].description
-                                        : '',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14),
-                                  ),
-                                  visible:
-                                      snapshot.data[index].description != null,
-                                ),
-                                Text(
+                          title: Text(
+                            snapshot.data[index].name ?? '',
+                            style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
+                          subtitle: Column(
+                            children: <Widget>[
+                              Visibility(
+                                child: const Text(
                                   '',
                                   style: TextStyle(fontSize: 6),
                                 ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        snapshot.data[index].language != null
-                                            ? snapshot.data[index].language
-                                            : '',
-                                        style: TextStyle(
-                                            color: Colors.blue, fontSize: 14),
-                                      ),
+                                visible:
+                                    snapshot.data[index].description != null,
+                              ),
+                              Visibility(
+                                child: Text(
+                                  snapshot.data[index].description ?? '',
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                ),
+                                visible:
+                                    snapshot.data[index].description != null,
+                              ),
+                              const Text(
+                                '',
+                                style: TextStyle(fontSize: 6),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      snapshot.data[index].language ?? '',
+                                      style: const TextStyle(
+                                          color: Colors.blue, fontSize: 14),
                                     ),
-                                    Image(
-                                      image: new AssetImage(
-                                          "assets/images/star80.png"),
-                                      width: 20,
-                                      height: 20,
-                                      color: null,
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.center,
-                                    ),
-                                    Text(
-                                      '  ',
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                    Text(
-                                      snapshot.data[index].stargazers_count !=
-                                              null
-                                          ? snapshot
-                                              .data[index].stargazers_count
-                                              .toString()
-                                          : '0',
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                    ),
-                                    Text(
-                                      '     ',
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                    Image(
-                                      image: new AssetImage(
-                                          "assets/images/codefork96.png"),
-                                      width: 20,
-                                      height: 20,
-                                      color: null,
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.center,
-                                    ),
-                                    Text(
-                                      '  ',
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                    Text(
-                                      snapshot.data[index].forks != null
-                                          ? snapshot.data[index].forks
-                                              .toString()
-                                          : '0',
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
+                                  ),
+                                  const Image(
+                                    image: AssetImage(
+                                        "assets/images/star80.png"),
+                                    width: 20,
+                                    height: 20,
+                                    color: null,
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.center,
+                                  ),
+                                  const Text(
+                                    '  ',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    snapshot.data[index].stargazers_count !=
+                                            null
+                                        ? snapshot
+                                            .data[index].stargazers_count
+                                            .toString()
+                                        : '0',
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                  ),
+                                  const Text(
+                                    '     ',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  const Image(
+                                    image: AssetImage(
+                                        "assets/images/codefork96.png"),
+                                    width: 20,
+                                    height: 20,
+                                    color: null,
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.center,
+                                  ),
+                                  const Text(
+                                    '  ',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    snapshot.data[index].forks != null
+                                        ? snapshot.data[index].forks
+                                            .toString()
+                                        : '0',
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                  )
+                                ],
+                              )
+                            ],
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   );
                 }
               },
@@ -199,16 +189,15 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_selectedChoice.title.toString() == "Share") {
         Utility().shareURL(context, widget.title);
       } else if (_selectedChoice.title.toString() == "Exit") {
-        Utility().onWillPop(context);
+        Utility().showExitDialog(context);
       }
     });
   }
 
-  @override
-  Future<List<UserRepos>> _getGitRepository(username) async {
+  Future<List<UserRepos>?> _getGitRepository(username) async {
     try {
       List<UserRepos> repos = [];
-      var response = await http.get(Uri.parse(Constants.BaseURL +
+      var response = await http.get(Uri.parse(constants.BaseURL +
           'users/' +
           username +
           '/repos?sort=updated&per_page=100'));
@@ -228,9 +217,9 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       return repos;
     } on SocketException catch (_) {
-      print('not connected');
+      // print('not connected');
       final snackBar = SnackBar(
-        content: Text('No Internet connected!'),
+        content: const Text('No Internet connected!'),
         action: SnackBarAction(
           label: 'Retry',
           onPressed: () {

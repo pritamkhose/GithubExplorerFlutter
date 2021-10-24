@@ -13,7 +13,7 @@ class Item {
 //  final String received_events_url;
 //  final String repos_url;
 //  final double score;
-  final String score;
+  final String? score;
 //  final String site_admin; // bool
 //  final String starred_url;
 //  final String subscriptions_url;
